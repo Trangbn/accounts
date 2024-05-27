@@ -14,8 +14,6 @@ public class Customer extends BaseEntity{
     private Long customerId;
     private String name;
     private String email;
-
-    @Column(name = "mobile number")
     private String mobileNumber;
 
 }
