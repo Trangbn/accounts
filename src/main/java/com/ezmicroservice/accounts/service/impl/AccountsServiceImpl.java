@@ -1,10 +1,13 @@
 package com.ezmicroservice.accounts.service.impl;
 
 import com.ezmicroservice.accounts.constants.AccountsConstants;
+import com.ezmicroservice.accounts.dto.AccountsDto;
 import com.ezmicroservice.accounts.dto.CustomerDto;
 import com.ezmicroservice.accounts.entity.Accounts;
 import com.ezmicroservice.accounts.entity.Customer;
 import com.ezmicroservice.accounts.exception.CustomerAlreadyExistsException;
+import com.ezmicroservice.accounts.exception.ResourceNotFoundException;
+import com.ezmicroservice.accounts.mapper.AccountsMapper;
 import com.ezmicroservice.accounts.mapper.CustomerMapper;
 import com.ezmicroservice.accounts.repository.AccountsRepository;
 import com.ezmicroservice.accounts.repository.CustomerRepository;
@@ -52,5 +55,22 @@ public class AccountsServiceImpl implements IAccountsService {
         newAccounts.setCreatedAt(LocalDateTime.now());
         newAccounts.setCreatedBy("Anonymous");
         return newAccounts;
+    }
+
+
+    @Override
+    public CustomerDto fetchAccount(String mobileNumber) {
+        Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber)
+        );
+
+        Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId()).orElseThrow(
+                () -> new ResourceNotFoundException("Accounts", "customerId", customer.getCustomerId().toString())
+        );
+
+        CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
+        AccountsDto accountsDto = AccountsMapper.mapToAccountsDto(accounts, new AccountsDto());
+        customerDto.setAccountsDto(accountsDto);
+        return customerDto;
     }
 }
