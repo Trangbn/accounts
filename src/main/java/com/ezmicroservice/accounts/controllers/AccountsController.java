@@ -6,6 +6,7 @@ import com.ezmicroservice.accounts.dto.ResponseDto;
 import com.ezmicroservice.accounts.service.IAccountsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,5 +29,13 @@ public class AccountsController {
     public ResponseEntity<CustomerDto> fetchAccountDetails(@RequestParam String mobileNumber) {
         CustomerDto customerDto = accountsService.fetchAccount(mobileNumber);
         return ResponseEntity.status(HttpStatus.OK).body(customerDto);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<ResponseDto> updateAccountsDetails(@RequestBody CustomerDto customerDto) {
+        boolean isUpdated = accountsService.updateAccount(customerDto);
+
+        return isUpdated ? ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(AccountsConstants.STATUS_200, AccountsConstants.MESSAGE_200))
+                : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto(AccountsConstants.STATUS_500, AccountsConstants.MESSAGE_500));
     }
 }
