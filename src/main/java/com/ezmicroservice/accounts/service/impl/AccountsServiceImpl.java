@@ -14,7 +14,6 @@ import com.ezmicroservice.accounts.repository.CustomerRepository;
 import com.ezmicroservice.accounts.service.IAccountsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.ErrorResponseException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
