@@ -10,7 +10,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,15 @@ import org.springframework.web.bind.annotation.*;
 public class AccountsController {
 
     private final IAccountsService accountsService;
+
+
+    /**
+     * This is for read environment properties not for properties in application.yml
+     * Disadvantage: read one variable at a time, and need to hard code variable name
+     * Same disadvantage for @Value
+     */
+    @Autowired
+    private Environment env;
 
     public AccountsController(IAccountsService accountsService) {
         this.accountsService = accountsService;
@@ -117,5 +128,20 @@ public class AccountsController {
     @GetMapping("/build-info")
     public ResponseEntity<String> getBuildInfo() {
         return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
+    }
+
+
+    @Operation(
+            summary = "Get java version",
+            description = "Get java version"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP status OK"
+    )
+    @GetMapping("/java-version")
+    public ResponseEntity<String> getJavaVersion() {
+        return ResponseEntity.status(HttpStatus.OK).body(env.getProperty("MAVEN_HOME"));
+//        return ResponseEntity.status(HttpStatus.OK).body(env.getProperty("JAVA_HOME"));
     }
 }
