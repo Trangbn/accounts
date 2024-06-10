@@ -1,13 +1,13 @@
 services:
   accounts:
     image: "trangbn/accounts:v1"
-    container_name: account-ms
+    container_name: accounts-ms
     ports:
       - "8080:8080"
     deploy:
       resources:
         limits:
-          memory: 700mb
+          memory: 700m
     networks:
       - ezmicroservice
   loans:
@@ -18,7 +18,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 700mb
+          memory: 700m
     networks:
       - ezmicroservice
   cards:
@@ -29,9 +29,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 700mb
+          memory: 700m
     networks:
       - ezmicroservice
-  networks:
-    ezmicroservice:
-      driver:"bridge"
+networks:
+  ezmicroservice:
+    driver: "bridge"
