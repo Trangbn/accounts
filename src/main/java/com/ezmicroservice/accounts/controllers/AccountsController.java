@@ -1,6 +1,7 @@
 package com.ezmicroservice.accounts.controllers;
 
 import com.ezmicroservice.accounts.constants.AccountsConstants;
+import com.ezmicroservice.accounts.dto.AccountsContactInfoDto;
 import com.ezmicroservice.accounts.dto.CustomerDto;
 import com.ezmicroservice.accounts.dto.ResponseDto;
 import com.ezmicroservice.accounts.service.IAccountsService;
@@ -38,6 +39,9 @@ public class AccountsController {
      */
     @Autowired
     private Environment env;
+
+    @Autowired
+    private AccountsContactInfoDto accountsContactInfoDto;
 
     public AccountsController(IAccountsService accountsService) {
         this.accountsService = accountsService;
@@ -143,5 +147,18 @@ public class AccountsController {
     public ResponseEntity<String> getJavaVersion() {
         return ResponseEntity.status(HttpStatus.OK).body(env.getProperty("MAVEN_HOME"));
 //        return ResponseEntity.status(HttpStatus.OK).body(env.getProperty("JAVA_HOME"));
+    }
+
+    @Operation(
+            summary = "Get contact details",
+            description = "Get contact details"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP status OK"
+    )
+    @GetMapping("/contact-info")
+    public ResponseEntity<AccountsContactInfoDto> getContactInfo() {
+        return ResponseEntity.status(HttpStatus.OK).body(accountsContactInfoDto);
     }
 }
